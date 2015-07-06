@@ -1,0 +1,28 @@
+{
+  "name": "fly-eslint",
+  "version": "0.1.0",
+  "description": "ESLint plugin for Fly",
+  "license": "MIT",
+  "repository": "https://github.com/bucaran/fly-eslint",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint *.js",
+    "tape": "tape test/*.js",
+    "test": "npm run lint && npm run tape | tspec",
+    "build": "echo No build task specified.",
+    "deploy": "npm run test && git push origin master && npm publish",
+    "test-ci": "node --harmony --harmony_arrow_functions ./node_modules/tape/bin/tape test/*.js"
+  },
+  "author": "Jorge Bucaran",
+  "dependencies": {
+    "eslint": "^0.24.0"
+  },
+  "devDependencies": {
+    "tap-spec": "^4.0.2",
+    "tape": "^4.0.0"
+  },
+  "engines": {
+    "iojs": ">= 1.0.0",
+    "node": ">= 0.11.0"
+  }
+}

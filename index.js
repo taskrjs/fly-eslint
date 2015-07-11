@@ -14,6 +14,6 @@ function createLinter (cli) {
 module.exports = function () {
   this.eslint = function (opts) {
     const lint = createLinter(new CLIEngine(opts))
-    return this.unwrap().then((files) => files.forEach(_ => lint(_.file)))
+    return this.unwrap((files) => files.forEach(file => lint(file)))
   }
 }

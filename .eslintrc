@@ -5,7 +5,9 @@
   "rules": {
     "semi": [2, "never"],
     "curly": 0,
-    "strict": 0
+    "strict": 0,
+    "no-shadow": 0,
+    "no-use-before-define": 0
   },
   "ecmaFeatures": {
     "arrowFunctions": true,

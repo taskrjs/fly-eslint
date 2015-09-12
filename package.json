@@ -15,10 +15,11 @@
     "test-harmony": "node --harmony --harmony_arrow_functions ./node_modules/tape/bin/tape test/*.js"
   },
   "author": "Jorge Bucaran",
-  "dependencies": {
-    "eslint": "^0.24.0"
+  "peerDependencies": {
+    "eslint": ">= 0.24.0"
   },
   "devDependencies": {
+    "eslint": ">= 0.24.0",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
   },

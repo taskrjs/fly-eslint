@@ -28,7 +28,7 @@ module.exports = function () {
       const warningCount = problems.reduce(sumProperty('warningCount'), 0)
 
       if (errorCount > 0 || warningCount.length > 0) {
-        throw `${errors} errors and ${warnings} warnings in ${problems.length} files.`
+        throw `${errorCount} errors and ${warningCount} warnings in ${problems.length} files.`
       }
     })
   }

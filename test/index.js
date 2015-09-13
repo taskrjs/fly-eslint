@@ -9,6 +9,10 @@ const state = {
   fail: {
     msg: "fail lint",
     spec: [join("test", "fixtures", "fail.js")]
+  },
+  nobleed: {
+    msg: "pass lint after failed one",
+    spec: [join("test", "fixtures", "pass.js")]
   }
 }
 const unwrap = function (f) { return f(this.spec) }
@@ -18,6 +22,7 @@ test("fly-eslint", function (t) {
   t.ok(fly.eslint !== undefined, "inject eslint in fly instance")
   run.call(fly, t, state.pass, true)
   run.call(fly, t, state.fail, false)
+  run.call(fly, t, state.nobleed, true)
   t.end()
 })
 
@@ -27,6 +32,10 @@ function run (t, state, pass) {
     this.eslint()
     t.ok(pass, state.msg)
   } catch (e) {
-    t.ok(!pass, state.msg)
+    if (e.name === 'LinterError') {
+      t.ok(!pass, state.msg)
+    } else {
+      throw e
+    }
   }
 }

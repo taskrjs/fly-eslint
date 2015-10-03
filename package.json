@@ -16,7 +16,7 @@
   },
   "author": "Jorge Bucaran",
   "dependencies": {
-    "eslint": "^0.24.0"
+    "eslint": ">=0.24.0"
   },
   "devDependencies": {
     "tap-spec": "^4.0.2",

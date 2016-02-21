@@ -9,8 +9,11 @@
     "no-shadow": 0,
     "no-use-before-define": 0
   },
-  "ecmaFeatures": {
-    "arrowFunctions": true,
-    "blockBindings": true
-  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "blockBindings": true
+    }
+  }
 }

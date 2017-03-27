@@ -1,41 +1,50 @@
 const test = require("tape").test
 const join = require("path").join
-const fly = {}
-const state = {
-  pass: {
-    msg: "pass lint",
-    spec: [join("test", "fixtures", "pass.js")]
-  },
-  fail: {
-    msg: "fail lint",
-    spec: [join("test", "fixtures", "fail.js")]
-  },
-  nobleed: {
-    msg: "pass lint after failed one",
-    spec: [join("test", "fixtures", "pass.js")]
-  }
-}
-const unwrap = function (f) { return f(this.spec) }
 
-test("fly-eslint", function (t) {
-  require("../").call(fly)
-  t.ok(fly.eslint !== undefined, "inject eslint in fly instance")
-  run.call(fly, t, state.pass, true)
-  run.call(fly, t, state.fail, false)
-  run.call(fly, t, state.nobleed, true)
-  t.end()
+const Fly = require("fly")
+const fixtureDir = join(__dirname,'fixtures')
+const eslintOpt = {
+  configFile: join(fixtureDir, '.eslintrc')
+}
+
+test("pass", t => {
+  t.plan(2)
+  const fly = new Fly({
+    plugins: [
+      require("../")
+    ],
+    tasks : {
+      *foo (f) {
+        yield f.source(join(fixtureDir, "pass.js"))
+          .eslint(eslintOpt)
+      }
+    }
+  })
+  const message = "should pass lint"
+  t.true("eslint" in fly.plugins, "attach `eslint()` plugin to fly")
+  fly.start("foo")
+    .then(() => t.ok(true, message))
+    .catch(() => t.ok(false, message))
 })
 
-function run (t, state, pass) {
-  try {
-    this.unwrap = unwrap.bind(state)
-    this.eslint()
-    t.ok(pass, state.msg)
-  } catch (e) {
-    if (e.name === 'LinterError') {
-      t.ok(!pass, state.msg)
-    } else {
-      throw e
+test("fail", t => {
+  t.plan(2)
+  const fly = new Fly({
+    plugins: [
+      require("../")
+    ],
+    tasks : {
+      *foo (f) {
+        yield f.source(join(fixtureDir, "fail.js"))
+          .eslint(eslintOpt)
+      }
     }
-  }
-}
+  })
+  t.true("eslint" in fly.plugins, "attach `eslint()` plugin to fly")
+  const message = "should fail lint"
+  fly.start("foo")
+    .then(() => t.ok(false, message))
+    .catch((e) => {
+      t.equal(e.name, "LinterError", "should throw LinterError")
+    })
+})

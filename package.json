@@ -9,22 +9,21 @@
     "lint": "eslint *.js",
     "setup": "npm i && npm test",
     "spec": "npm run test | tspec",
-    "test": "npm run lint && npm run test-harmony",
+    "test": "npm run lint && tape test/*.js",
     "build": "echo No build task specified.",
-    "deploy": "npm run test && git push origin master && npm publish",
-    "test-harmony": "node --harmony --harmony_arrow_functions ./node_modules/tape/bin/tape test/*.js"
+    "deploy": "npm run test && git push origin master && npm publish"
   },
   "author": "Jorge Bucaran",
   "dependencies": {
     "eslint": ">=0.24.0"
   },
   "devDependencies": {
+    "fly": "^2.0.5",
     "tap-spec": "^4.0.2",
     "tape": "^4.0.0"
   },
   "engines": {
-    "iojs": ">= 1.0.0",
-    "node": ">= 0.11.0"
+    "node": ">= 4.6"
   },
   "keywords": [
     "fly",

@@ -1,4 +1,5 @@
 const CLIEngine = require("eslint").CLIEngine
+const join = require("path").join
 
 function createLinter (cli) {
   const fmt = cli.getFormatter()
@@ -28,20 +29,17 @@ function LinterError(message) {
 
 LinterError.prototype = Object.create(Error.prototype)
 
-module.exports = function () {
-  this.eslint = function (opts) {
+module.exports = function (fly) {
+  fly.plugin("eslint", {every: 0}, function * (files, opts) {
     const lint = createLinter(new CLIEngine(opts))
 
-    return this.unwrap((files) => {
-      const problems = files.map(file => lint(file))
-        .filter((problem) => problem.errorCount > 0 || problem.warningCount > 0)
+    const problems = files.map(file => lint(join(file.dir, file.base)))
+      .filter(problem => problem.errorCount > 0 || problem.warningCount > 0)
+    const errorCount = problems.reduce(sumProperty("errorCount"), 0)
+    const warningCount = problems.reduce(sumProperty("warningCount"), 0)
 
-      const errorCount = problems.reduce(sumProperty("errorCount"), 0)
-      const warningCount = problems.reduce(sumProperty("warningCount"), 0)
-
-      if (errorCount > 0 || warningCount > 0) {
-        throw new LinterError(errorCount + " errors and " + warningCount + " warnings in " + problems.length + " files.")
-      }
-    })
-  }
+    if (errorCount > 0 || warningCount > 0) {
+      throw new LinterError(errorCount + " errors and " + warningCount + " warnings in " + problems.length + " files.")
+    }
+  })
 }
